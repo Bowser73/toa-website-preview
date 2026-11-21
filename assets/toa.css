@@ -108,7 +108,10 @@ h3{font-size:var(--step-1);letter-spacing:-.01em;line-height:1.15}
 .hero-copy p{font-size:var(--step-1);line-height:1.45;color:var(--chalk);opacity:.9;max-width:34ch;animation:fadein 1s .5s both}
 .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:1.4em;animation:fadein 1s .7s both}
 @keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.through-copy{position:absolute;left:0;right:0;bottom:12vh;z-index:6;opacity:var(--after,0);transform:translateY(calc((1 - var(--after,0)) * 40px))}
+.through-copy{position:absolute;left:0;right:0;bottom:12vh;z-index:6;pointer-events:none;visibility:hidden;opacity:var(--after,0);transform:translateY(calc((1 - var(--after,0)) * 40px))}
+.frame-hero.is-through .through-copy{pointer-events:auto;visibility:visible}
+.frame-hero.is-through .hero-copy{pointer-events:none}
+.frame-hero.is-past .through-copy{visibility:visible}
 .through-copy h2{font-size:var(--step-3);color:#fff;max-width:16ch;text-shadow:0 4px 40px rgba(0,0,0,.35)}
 .through-copy p{font-size:var(--step-1);max-width:40ch;color:#fff}
 .through-copy .quote{font-family:var(--hand);font-size:var(--step-2);line-height:1.15;color:var(--mum);margin:0 0 .8em;letter-spacing:.02em;max-width:30ch}

@@ -37,6 +37,7 @@
   }
   const finalIdx = Math.max(0, photos.findIndex((p) => p.closest('picture')?.hasAttribute('data-final') || p.hasAttribute('data-final')));
   const layer = hero && $('.frame-photos', hero);
+  if (hero && reduce) hero.classList.add('is-through', 'is-past');
   function heroFrame() {
     if (!hero || reduce) return;
     const r = hero.getBoundingClientRect();
@@ -49,7 +50,11 @@
     hero.style.setProperty('--copy', clamp(1 - p / 0.28).toFixed(3));
     hero.style.setProperty('--lift', (-p * 120).toFixed(1) + 'px');
     hero.style.setProperty('--shade', clamp((p - 0.45) / 0.3).toFixed(3));
-    hero.style.setProperty('--after', clamp((p - 0.55) / 0.25).toFixed(3));
+    const after = clamp((p - 0.55) / 0.25);
+    hero.style.setProperty('--after', after.toFixed(3));
+    // only the visible layer may take taps and focus
+    hero.classList.toggle('is-past', after > 0.01);
+    hero.classList.toggle('is-through', after > 0.5);
     if (aperture && layer) {
       // the photo layer is exactly the part of the frame opening that is on screen,
       // so photos end the zoom at native screen size instead of being blown up
@@ -170,12 +175,18 @@
     if (tabs[0]) show(tabs[0].dataset.room);
   });
 
-  /* Lightbox for galleries */
+  /* Lightbox for galleries: modal, background inert, focus stays inside */
   const lb = $('.lightbox');
   if (lb) {
     const img = $('img', lb), cap = $('p', lb), close = $('button', lb);
+    const outside = ['.site-head', 'main', '.site-foot', '.alertbar'].map((s) => $(s)).filter(Boolean);
     let opener = null;
-    const shut = () => { lb.classList.remove('is-open'); img.src = ''; opener && opener.focus(); };
+    const shut = () => {
+      lb.classList.remove('is-open');
+      img.src = '';
+      outside.forEach((el) => { el.inert = false; el.removeAttribute('aria-hidden'); });
+      opener && opener.focus();
+    };
     $$('[data-lightbox]').forEach((a) => a.addEventListener('click', (e) => {
       e.preventDefault();
       opener = a;
@@ -183,10 +194,16 @@
       img.alt = a.querySelector('img')?.alt || '';
       cap.textContent = a.dataset.caption || '';
       lb.classList.add('is-open');
+      outside.forEach((el) => { el.inert = true; el.setAttribute('aria-hidden', 'true'); });
       close.focus();
     }));
     close.addEventListener('click', shut);
     lb.addEventListener('click', (e) => { if (e.target === lb) shut(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lb.classList.contains('is-open')) shut(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lb.classList.contains('is-open')) return;
+      if (e.key === 'Escape') shut();
+      // Close is the only control in the dialog, so Tab and Shift+Tab stay on it
+      else if (e.key === 'Tab') { e.preventDefault(); close.focus(); }
+    });
   }
 })();
