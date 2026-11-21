@@ -394,3 +394,5 @@ h3{font-size:var(--step-1);letter-spacing:-.01em;line-height:1.15}
 .event .tag{animation:sway-word 4s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.ribbon-track{animation:none}.page-hero .kicker{clip-path:none}}
 [id]{scroll-margin-top:84px}
+.foot-note .powered a{display:inline;padding:0;font-weight:700;color:var(--mum);opacity:1;text-decoration:underline;text-underline-offset:3px}
+.foot-note .powered a:hover{color:#ffd34d}
