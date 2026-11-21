@@ -54,9 +54,16 @@ h3{font-size:var(--step-1);letter-spacing:-.01em;line-height:1.15}
 .brand b{font-family:var(--display);font-size:1.25rem;letter-spacing:-.01em;display:block;line-height:1}
 .brand span{font-size:.78rem;opacity:.75;display:block}
 .nav{display:flex;gap:2px;align-items:center}
-.nav a{text-decoration:none;padding:8px 11px;border-radius:999px;font-size:.95rem;opacity:.86}
-.nav a:hover{opacity:1;background:rgba(239,231,251,.08)}
-.nav a[aria-current="page"]{opacity:1;background:rgba(107,47,209,.45)}
+.nav-item{position:relative;display:flex;align-items:center}
+.nav-top{text-decoration:none;padding:8px 11px;border-radius:999px;font-size:.95rem;opacity:.86}
+.nav-item:hover .nav-top,.nav-item:focus-within .nav-top{opacity:1;background:rgba(239,231,251,.08)}
+.nav-top[aria-current="page"]{opacity:1;background:rgba(107,47,209,.45)}
+.sub-toggle{display:none}
+.sub{position:absolute;top:100%;left:50%;min-width:230px;padding:14px 8px 8px;transform:translate(-50%,6px);opacity:0;visibility:hidden;transition:opacity .2s ease,transform .2s ease,visibility 0s .2s;z-index:60}
+.sub::before{content:"";position:absolute;inset:8px 0 0;background:var(--plum-2);border:1px solid rgba(239,231,251,.12);border-radius:14px;box-shadow:0 24px 50px -20px rgba(0,0,0,.6);z-index:-1}
+.sub a{display:block;text-decoration:none;padding:10px 14px;border-radius:9px;font-size:.93rem;color:var(--chalk);white-space:nowrap}
+.sub a:hover,.sub a:focus-visible{background:rgba(107,47,209,.5);color:#fff}
+.nav-item:hover .sub,.nav-item:focus-within .sub{opacity:1;visibility:visible;transform:translate(-50%,0);transition:opacity .2s ease,transform .2s ease,visibility 0s}
 .give-btn,.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;font-family:var(--display);font-weight:700;text-decoration:none;border-radius:999px;padding:.8em 1.4em;border:0;cursor:pointer;font-size:1rem;line-height:1;transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
 .give-btn,.btn-give{background:var(--mum);color:var(--ink);box-shadow:0 0 0 0 rgba(244,196,48,.5)}
 .give-btn:hover,.btn-give:hover{background:#ffd34d;transform:translateY(-2px);box-shadow:0 10px 30px -10px rgba(244,196,48,.8)}
@@ -67,10 +74,21 @@ h3{font-size:var(--step-1);letter-spacing:-.01em;line-height:1.15}
 .menu-btn{display:none;background:none;border:2px solid rgba(239,231,251,.4);color:var(--chalk);border-radius:999px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer}
 @media (max-width:1040px){
   .menu-btn{display:inline-flex}
-  .nav{position:fixed;inset:68px 0 auto 0;background:var(--plum);flex-direction:column;align-items:stretch;padding:12px 24px 24px;gap:4px;transform:translateY(-120%);transition:transform .35s ease;max-height:calc(100vh - 68px);overflow:auto}
-  .nav.is-open{transform:none}
-  .nav a{padding:14px 12px;font-size:1.1rem;border-radius:12px}
+  .nav{position:absolute;top:100%;left:0;right:0;background:var(--plum);flex-direction:column;align-items:stretch;padding:10px 20px 24px;gap:2px;max-height:calc(100vh - 140px);max-height:calc(100dvh - 140px);overflow:auto;-webkit-overflow-scrolling:touch;
+    opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .25s ease,transform .25s ease,visibility 0s .25s;border-bottom:3px solid var(--paint);box-shadow:0 30px 40px -20px rgba(0,0,0,.6)}
+  .nav.is-open{opacity:1;visibility:visible;transform:none;transition:opacity .25s ease,transform .25s ease,visibility 0s}
+  .nav-item{flex-wrap:wrap;border-bottom:1px solid rgba(239,231,251,.1)}
+  .nav-top{flex:1;padding:15px 10px;font-size:1.1rem;border-radius:10px}
+  .nav-item:hover .nav-top{background:none}
+  .sub-toggle{display:grid;place-items:center;width:48px;height:48px;background:none;border:0;color:var(--chalk);cursor:pointer;border-radius:10px}
+  .sub-toggle span{width:10px;height:10px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s ease}
+  .sub-toggle[aria-expanded="true"] span{transform:rotate(-135deg) translateY(-2px)}
+  .sub,.nav-item:hover .sub,.nav-item:focus-within .sub{position:static;flex-basis:100%;min-width:0;padding:0 0 10px 10px;transform:none;opacity:1;visibility:visible;display:none;transition:none}
+  .sub::before{display:none}
+  .nav .nav-item .sub.is-open{display:block}
+  .sub a{padding:11px 12px;font-size:1rem;white-space:normal;opacity:.85}
   .head-in .give-btn{padding:.7em 1.1em}
+}
 }
 
 /* Painted frame (the T.O.A. Trunk or Treat frame, as a reusable motif) */
@@ -375,3 +393,4 @@ h3{font-size:var(--step-1);letter-spacing:-.01em;line-height:1.15}
 @keyframes tick{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 .event .tag{animation:sway-word 4s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.ribbon-track{animation:none}.page-hero .kicker{clip-path:none}}
+[id]{scroll-margin-top:84px}

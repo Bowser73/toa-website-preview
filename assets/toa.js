@@ -5,14 +5,26 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
-  /* Mobile menu */
+  /* Menu: phone open/close, section lists, close after choosing a link */
   const menuBtn = $('.menu-btn'), nav = $('#nav');
+  const setMenu = (open) => {
+    if (!nav || !menuBtn) return;
+    nav.classList.toggle('is-open', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.textContent = open ? 'Close' : 'Menu';
+  };
   if (menuBtn && nav) {
-    menuBtn.addEventListener('click', () => {
-      const open = nav.classList.toggle('is-open');
-      menuBtn.setAttribute('aria-expanded', String(open));
-    });
+    menuBtn.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+    nav.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('is-open')) { setMenu(false); menuBtn.focus(); } });
+    document.addEventListener('click', (e) => { if (nav.classList.contains('is-open') && !e.target.closest('.site-head')) setMenu(false); });
   }
+  $$('.sub-toggle').forEach((t) => t.addEventListener('click', () => {
+    const sub = document.getElementById(t.getAttribute('aria-controls'));
+    const open = t.getAttribute('aria-expanded') !== 'true';
+    t.setAttribute('aria-expanded', String(open));
+    sub && sub.classList.toggle('is-open', open);
+  }));
 
   /* Header hides on scroll down, returns on scroll up; scroll thread */
   const head = $('.site-head'), thread = $('.thread');
